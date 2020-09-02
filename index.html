@@ -1,266 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Passport</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Passport</title>
 
-  <style>
-    textarea {
-        resize: vertical;
-        width: 95%;
-        margin-top:4px;
-    }
-    select {
-      display: block;
-      width: 100%;
-      height: 30px;}
-      input { color:#444; }
-      input#uname,input#passw, span#owspan {font-family:monospace; font-size: 0.9em }
-
-    .form-control {
-      padding: 4px 12px;
-      font-size: 14px;
-      line-height: 1.42857143;
-      color: #555;
-      background-color: #fff;
-      background-image: none;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-      -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-      -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    }
-    .btn {
-      display: inline-block;
-      padding: 4px 12px;
-      margin-bottom: 0;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.42857143;
-      text-align: center;
-      white-space: nowrap;
-      vertical-align: middle;
-      -ms-touch-action: manipulation;
-      touch-action: manipulation;
-      cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      background-image: none;
-      border: 1px solid transparent;
-      border-radius: 4px;
-    }
-    .btn-info {
-      color: #fff;
-      background-color: #5bc0de;
-      border-color: #46b8da;
-    }
-    .btn-copy {
-          padding: 0px 12px;
-          color: #fff;
-          background-color: #5bc0de;
-          border-color: #46b8da;
-        }
-    .btn-warning {
-      color: #fff;
-      background-color: #f0ad4e;
-      border-color: #eea236;
-    }
-    .btn-success {
-      color: #fff;
-      background-color: #5cb85c;
-      border-color: #4cae4c;
-    }
-    button { border-radius: 4px; background: #f4f4f4; margin-bottom: 5px; }
-    .alert { padding: 6px;  margin-bottom: 5px;  font-size: 0.9em;
-      border: 1px solid #CCC;
-      border-radius: 4px;
-      animation-name: hide;
-      animation-duration: 1s;
-      animation-fill-mode: forwards;
-      animation-play-state: paused;
-    }
-    button#delete { margin-top: 4px; }
-    .alert-danger { background: #EAA; color:#B33}
-    .alert-success {background: #f0ad4e; }
-    .hide, #clear, #owspan { float:right;}
-    button.hide { border:0; background:none; margin-top:-7px;
-      font-size: 1.6em; color :#AAA;}
-    div.alert-danger>button.hide:hover { color :#E33 }
-    div.alert-success>button.hide:hover { color :#3B3 }
-    button:hover { cursor: pointer; color: #393; }
-    @keyframes hide {
-      from {
-        opacity: 0.7;
-        font-size: 0.9em;
-        height: auto;
+    <style>
+      textarea {
+          resize: vertical;
+          width: 95%;
+          margin-top:4px;
       }
-      to {10
-        opacity: 0;
-        font-size: 0.1em;
-        height: 0;
-      }
-    }
-
-    body {font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; color:#555}
-    .container { max-width:500px; margin-left: auto; margin-right: auto; }
-    pre { display: block; padding: 6px; margin: 4px 0 0 0 ; font-size: 12px; line-height: 1.42857143;
-      color: #777; word-break: break-all; word-wrap: break-word; overflow: auto; background-color: #f4f4f4;
-      border: 1px solid #999;  border-radius: 4px; }
-    span#notes, span#plaintextarea {font-size: 11px;  color: #666;} /*line-height: 1.42857143;*/
-    #decrypt, #encrypt { float:right; }
-    select { border-radius: 4px; background: #f4f4f4; font-size: 15px;border: 2px solid #bbb; }
-    h5 {margin : 7px 0 5px 0; }
-    .titlerow {height:1.6em; padding:6px; margin-bottom: 4px; margin-top: -8px; margin-right: -4px;
-      margin-left: -4px; background: #9D9; color:#363}
-    .muted {      font-family: "Courier";      font-size: 9px;}
-    /* modal css */
-    .modal{
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left:0;
-        top:0;
-        height: 100%;
+      select {
+        display: block;
         width: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-    .modal-content{
-        background-color: #f4f4f4;
-        margin-top: 100px;
-        margin-left: 50px;
-        padding: 0;
-        width: 70%;
-        box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17) ;
-        animation-name: modalopen;
-        animation-duration: 1s;
-    }
-    .modal-header h2, .modal-footer h3 {
-        margin:0;
-    }
-    .modal-header, .modal-footer{
-        padding: 15px;
-        color: #333;
-        background-color: #AEA;
-        border-color: #4cae4c;
-    }
-    .modal-body{
-        padding: 10px 20px;
-    }
-    .closeBtn{
-        color: #fff;
-        float: right;
-        font-size: 30px;
-    }
-    .closeBtn:hover, .closeBtn:focus{
-        color: #000;
-        text-decoration: none;
+        height: 30px;}
+        input { color:#444; }
+        input#uname,input#passw, span#owspan {font-family:monospace; font-size: 0.9em }
+
+      .form-control {
+        padding: 4px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      }
+      .btn {
+        display: inline-block;
+        padding: 4px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
         cursor: pointer;
-    }
-    @keyframes modalopen {
-        from{ opacity: 0}
-        to{ opacity: 1}
-    }
-    /* end modal */
-   </style>
-   <!-- https://github.com/bitwiseshiftleft/sjcl/blob/master/sjcl.js
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+      }
+      .btn-info {
+        color: #fff;
+        background-color: #5bc0de;
+        border-color: #46b8da;
+      }
+      .btn-copy {
+            padding: 0px 12px;
+            color: #fff;
+            background-color: #5bc0de;
+            border-color: #46b8da;
+          }
+      .btn-warning {
+        color: #fff;
+        background-color: #f0ad4e;
+        border-color: #eea236;
+      }
+      .btn-success {
+        color: #fff;
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+      }
+      button { border-radius: 4px; background: #f4f4f4; margin-bottom: 5px; }
+      .alert { padding: 6px;  margin-bottom: 5px;  font-size: 0.9em;
+        border: 1px solid #CCC;
+        border-radius: 4px;
+        animation-name: hide;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-play-state: paused;
+      }
+      button#delete { margin-top: 4px; }
+      .alert-danger { background: #EAA; color:#B33}
+      .alert-success {background: #f0ad4e; }
+      .hide, #clear, #owspan { float:right;}
+      button.hide { border:0; background:none; margin-top:-7px;
+        font-size: 1.6em; color :#AAA;}
+      div.alert-danger>button.hide:hover { color :#E33 }
+      div.alert-success>button.hide:hover { color :#3B3 }
+      button:hover { cursor: pointer; color: #393; }
+      @keyframes hide {
+        from {
+          opacity: 0.7;
+          font-size: 0.9em;
+          height: auto;
+        }
+        to {10
+          opacity: 0;
+          font-size: 0.1em;
+          height: 0;
+        }
+      }
+
+      body {font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; color:#555}
+      .container { max-width:500px; margin-left: auto; margin-right: auto; }
+      pre { display: block; padding: 6px; margin: 4px 0 0 0 ; font-size: 12px; line-height: 1.42857143;
+        color: #777; word-break: break-all; word-wrap: break-word; overflow: auto; background-color: #f4f4f4;
+        border: 1px solid #999;  border-radius: 4px; }
+      span#notes, span#plaintextarea {font-size: 11px;  color: #666;} /*line-height: 1.42857143;*/
+      #decrypt, #encrypt { float:right; }
+      select { border-radius: 4px; background: #f4f4f4; font-size: 15px;border: 2px solid #bbb; }
+      h5 {margin : 7px 0 5px 0; }
+      .titlerow {height:1.6em; padding:6px; margin-bottom: 4px; margin-top: -8px; margin-right: -4px;
+        margin-left: -4px; background: #9D9; color:#363}
+      .muted {      font-family: "Courier";      font-size: 9px;}
+      /* modal css */
+      .modal{
+          display: none;
+          position: fixed;
+          z-index: 1;
+          left:0;
+          top:0;
+          height: 100%;
+          width: 100%;
+          overflow: auto;
+          background-color: rgba(0, 0, 0, 0.5);
+      }
+      .modal-content{
+          background-color: #f4f4f4;
+          margin-top: 100px;
+          margin-left: 50px;
+          padding: 0;
+          width: 70%;
+          box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17) ;
+          animation-name: modalopen;
+          animation-duration: 1s;
+      }
+      .modal-header h2, .modal-footer h3 {
+          margin:0;
+      }
+      .modal-header, .modal-footer{
+          padding: 15px;
+          color: #333;
+          background-color: #AEA;
+          border-color: #4cae4c;
+      }
+      .modal-body{
+          padding: 10px 20px;
+      }
+      .closeBtn{
+          color: #fff;
+          float: right;
+          font-size: 30px;
+      }
+      .closeBtn:hover, .closeBtn:focus{
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+      }
+      @keyframes modalopen {
+          from{ opacity: 0}
+          to{ opacity: 1}
+      }
+      /* end modal */
+    </style>
+    <!-- https://github.com/bitwiseshiftleft/sjcl/blob/master/sjcl.js
    // https://github.com/zenorocha/clipboard.js -->
-   <script src="sjcl.js"></script>
-   <script src="clipboard.min.js"></script>
-</head>
-<body>
-  <div class="container">
-    <h3 class="titlerow"> Portable Password Manager
+    <script src="sjcl.js"></script>
+    <script src="clipboard.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h3 class="titlerow">
+        Portable Password Manager
         <button id="clear" class="btn btn-success">Clear</button>
-    </h3>
-    <h5 id="decryptheader">Decrypt</h5>
-    <div id="decryptdiv">
-      <select id="mySelect" class="form-control"></select>
-      <div><span id="notes">.</span></div>
-      <div>
-        <form id="decryptform">
-          <div>
-            <input id="password" class="form-control" autocomplete="off" autofocus placeholder=
-           "Enter password" type="password">
-            <button id="decrypt" class="btn btn-info">Decrypt</button>
+      </h3>
+      <h5 id="decryptheader">Decrypt</h5>
+      <div id="decryptdiv">
+        <select id="mySelect" class="form-control"></select>
+        <div><span id="notes">.</span></div>
+        <div>
+          <form id="decryptform">
+            <div>
+              <input
+                id="password"
+                class="form-control"
+                autocomplete="off"
+                autofocus
+                placeholder="Enter password"
+                type="password"
+              />
+              <button id="decrypt" class="btn btn-info">Decrypt</button>
+            </div>
+          </form>
+          <span id="plaintextarea"></span>
+          <button
+            id="split"
+            class="btn btn-copy"
+            title="split username~password at ~"
+          >
+            Split at ~
+          </button>
+          <div id="splitarea">
+            <div>
+              <input id="uname" type="text" />
+              <button
+                id="zz"
+                title="copy to clipboard"
+                class="btn btn-copy"
+                data-clipboard-target="#uname"
+              >
+                &copy;
+              </button>
+            </div>
+            <div>
+              <input id="passw" type="text" />
+              <button
+                id="tt"
+                title="copy to clipboard"
+                class="btn btn-copy"
+                data-clipboard-target="#passw"
+              >
+                &copy;
+              </button>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <h5>Add Edit Delete Merge</h5>
+      <div>
+        <form id="encryptform">
+          <div>
+            <button
+              id="editbtn"
+              class="btn btn-success"
+              title="carry into label/text input fields"
+            >
+              copy &raquo;
+            </button>
+
+            <label for="label">Label </label
+            ><input id="label" class="form-control" name="label" type="text" />
+          </div>
+          <div>
+            <label for="text">Text </label
+            ><input
+              id="raw"
+              class="form-control"
+              type="text"
+              name="text"
+              autocomplete="off"
+            />
+            <button id="encrypt" type="submit" class="btn btn-warning">
+              Encrypt
+            </button>
+          </div>
+          <button id="delete" title="Delete this entry" class="btn btn-warning">
+            Delete
+          </button>
         </form>
-        <span id="plaintextarea"></span>
-        <button id="split" class="btn btn-copy" title="split username~password at ~">
-          Split at ~ </button>
-        <div id="splitarea">
-          <div>
-            <input id="uname" type="text">
-            <button id='zz' title="copy to clipboard" class="btn btn-copy" data-clipboard-target="#uname">&copy;</button>
-          </div>
-          <div>
-            <input id="passw" type="text">
-            <button id='tt' title="copy to clipboard" class="btn btn-copy" data-clipboard-target="#passw">&copy;</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <h5>Add Edit Delete Merge</h5>
-    <div>
-      <form id="encryptform">
+        <div id="resultdiv"><pre></pre></div>
         <div>
-          <button id="editbtn" class="btn btn-success" title="carry into label/text input fields">copy &raquo;</button>
-
-          <label for="label">Label </label><input id="label" class="form-control" name = "label" type="text">
+          <button
+            id="res"
+            title="copy to clipboard"
+            class="btn btn-copy"
+            data-clipboard-target="#resultdiv"
+          >
+            &copy;
+          </button>
         </div>
         <div>
-          <label for="text">Text </label><input id="raw" class="form-control" type="text" name="text" autocomplete="off">
-          <button id="encrypt" type="submit" class="btn btn-warning">Encrypt</button>
+          <textarea
+            name="result"
+            id="result"
+            class="form-control"
+            rows="3"
+            placeholder="Merge area"
+          ></textarea>
         </div>
-        <button id="delete" title="Delete this entry" class="btn btn-warning">Delete</button>
-      </form>
-      <div id="resultdiv"><pre> </pre></div>
-      <div>
-        <button id='res' title="copy to clipboard" class="btn btn-copy" data-clipboard-target="#resultdiv" >&copy;</button>
+        <div>
+          <button id="merge" class="btn btn-info">Merge</button>
+          <span id="owspan">
+            <label for="overwrite"
+              >overwrite existing<input
+                class="form-control"
+                type="checkbox"
+                id="overwrite"
+                name="overwrite"
+                value="newsletter"
+            /></label>
+          </span>
+        </div>
       </div>
-      <div>
-        <textarea name='result' id='result' class="form-control" rows="3" placeholder="Merge area"></textarea>
-      </div>
-      <div>
-            <button id='merge' class="btn btn-info">Merge</button>
-            <span id="owspan">
-              <label for="overwrite">overwrite existing<input  class="form-control"
-              type="checkbox" id="overwrite" name="overwrite"  value="newsletter"></label>
-            </span>
-      </div>
-    </div>
 
-    <div id="simpleModal" class="modal">
+      <div id="simpleModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <span class="closeBtn">&times;</span>
-                <h2>Enter Password:</h2>
+          <div class="modal-header">
+            <span class="closeBtn">&times;</span>
+            <h2>Enter Password:</h2>
+          </div>
+          <div class="modal-body">
+            <p></p>
+            <div>
+              <form id="modal_form">
+                <input
+                  id="modalpassword"
+                  autocomplete="off"
+                  autofocus
+                  placeholder="Enter password"
+                  type="password"
+                />
+              </form>
             </div>
-            <div class="modal-body">
-                <p></p>
-                <div>
-                  <form id="modal_form">
-                    <input id="modalpassword" autocomplete="off"
-                     autofocus placeholder="Enter password" type="password">
-                  </form>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <h3></h3>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <h3></h3>
+          </div>
         </div>
+      </div>
+      <br />
+      <span class="muted">v. 19 01 11 b </span>
     </div>
-    <br>
-    <span class="muted">v. 19 01 11</span>
-  </div>
-  <script src="passport.js" charset="utf-8"></script>
-</body>
+    <script src="passport.js" charset="utf-8"></script>
+  </body>
 </html>
