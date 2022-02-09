@@ -1,34 +1,57 @@
 <! DOCTYPE html>
-<html>
-<head>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <title>Whelp5</title>
     <style>
+      :root {
+        font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 16px;
+      }
       ::placeholder {
         color: rgb(185, 185, 185);
         opacity: 1; /* Firefox */
       }
-      select {
+      input#g {
         display: block;
-        width: 100%;
-        height: 30px;
+        width: 120px;
+        height: 60px;
       }
       input {
         color: #444;
       }
+      button,
       input#g,
       input#y,
       input#b {
+        /*font-variant: small-caps;*/
+		text-transform: uppercase;
         font-family: monospace;
-        font-size: 2.1em;
+        font-size: 2rem;
       }
+
+	  html {
+        height: 100%;
+      }
+      body {
+        height: 100%;
+        background-color: var(--color-background);
+        margin: 0;
+        padding: 0;
+        /* Prevent scrollbar appearing on page transition */
+        overflow-y: hidden;
+      }
+
+
+
     </style>
 </head>
 <body>
-<h1>Whelp5</h1>
-<div id="hints">
-<div id="divg">Green letters (5 in order and - for missing): <input type="text" id="g" name="g" value="-----" ></div><br/>
-<div id="divy">Yellow letters (any order): <input type="text" id="y" name="y" value=""></div><br/>
-<div id="divb">Black letters (any order): <input type="text" id="b" name="y" value=""></div><br/>
+<h1 align="center">WHELP5</h1>
+<div id="hints" align="center">
+<div id="divg">Green letters (5 in order and - for missing)<br/> <input type="text" id="g" name="g" value="-----" ></div><br/>
+<div id="divy">Yellow letters (any order)<br/> <input type="text" id="y" name="y" value=""></div><br/>
+<div id="divb">Black letters (any order)<br/> <input type="text" id="b" name="y" value=""></div><br/>
 <button id="search">Process</button>
 <div><span id="notes">.</span></div>
 </div>
@@ -40,73 +63,76 @@ const string = 'aback abaft abase abash abate abbey abbot abeam abets abhor abid
 
 document.querySelector("#search").onclick = () => {
 
-    var yellows = document.querySelector("#y").value;
-    var greens = document.querySelector("#g").value;
-    var blacks = document.querySelector("#b").value;
-    var chars = {};
-    var notes = "";
+var greens = document.querySelector("#g").value.toLowerCase();
+greens += '-----';
+greens = greens.substring(0,5);
+var yellows = document.querySelector("#y").value.toLowerCase();
+var blacks = document.querySelector("#b").value.toLowerCase();
+var chars = {};
+var notes = "";
 
-    var exclstr = '[^' + blacks + ']';
-    var regstr = ' (';
+var exclstr = '[^' + blacks + ']';
+var regstr = ' (';
 
-    [...greens].forEach(ch => {
-      if (ch == '-')
-        regstr += exclstr;
-      else
-        regstr += ch;
-    });
-    regstr += ')';
-    console.log(exclstr, regstr);
+[...greens].forEach(ch => {
+  if (ch == '-')
+    regstr += exclstr;
+  else
+    regstr += ch;
+});
+regstr += ')';
+console.log(greens,  yellows, blacks, exclstr, regstr);
 
-    const re = new RegExp(regstr, "g")
-    const found = [];
-    // Iterate found
-    let match = null;
-    do {
-        match = re.exec(string);
-        if(match) {
-            found.push(match[1]);
-        }
-    } while (match);
-
-    // found = [for (w of found) if (w.includes(ch)) w];
-    [...yellows].forEach(ch => {
-        [...found].forEach(w => {
-            if (!w.includes(ch)) {
-                var index = found.indexOf(w);
-                if (index > -1) {
-                    found.splice(index, 1);
-                }
-            }
-        })
-    });
-
-    lenf = found.length;
-    console.log(found);
-    console.log(lenf, regstr);
-    [...found].forEach(w => {
-        [...w].forEach(ch => {
-            if (!chars[ch]) chars[ch] = 1; else chars[ch] += 1;
-        })
-    });
-    
-    [...greens].forEach(ch => {
-        chars[ch] -= lenf;
-    });
-    [...yellows].forEach(ch => {
-        chars[ch] -= lenf;
-        chars[ch] = Math.max(0, chars[ch])
-    });
-    //console.log(chars);
-    for (const [ch, count] of Object.entries(chars)) {
-        if (count > 0) {
-            notes += `${ch}: ${count} ${'*'.repeat(5*count/lenf)}<br>`;
-        }
-        //console.log(`${ch}: ${value}`);
+const re = new RegExp(regstr, "g")
+const found = [];
+// Iterate found
+let match = null;
+do {
+    match = re.exec(string);
+    if(match) {
+        found.push(match[1]);
     }
-    document.querySelector("#notes").innerHTML = notes;
+} while (match);
+
+// found = [for (w of found) if (w.includes(ch)) w];
+[...yellows].forEach(ch => {
+    [...found].forEach(w => {
+        if (!w.includes(ch)) {
+            var index = found.indexOf(w);
+            if (index > -1) {
+                found.splice(index, 1);
+            }
+        }
+    })
+});
+
+lenf = found.length;
+console.log(found);
+console.log(lenf, regstr);
+[...found].forEach(w => {
+    [...w].forEach(ch => {
+        if (!chars[ch]) chars[ch] = 1; else chars[ch] += 1;
+    })
+});
+
+[...greens].forEach(ch => {
+    chars[ch] -= lenf;
+});
+[...yellows].forEach(ch => {
+    chars[ch] -= lenf;
+    chars[ch] = Math.max(0, chars[ch])
+});
+//console.log(chars);
+for (const [ch, count] of Object.entries(chars)) {
+    if (count > 0) {
+        notes += `${ch}: ${count} ${'*'.repeat(5*count/lenf)}<br>`;
+    }
+    //console.log(`${ch}: ${value}`);
+}
+document.querySelector("#notes").innerHTML = notes;
 }
 
 
-
 </script>
+</body>
+</html>
