@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Pocket Pass</title>
+
+    <style>
+      ::placeholder {
+        color: rgb(185, 185, 185);
+        opacity: 1; /* Firefox */
+      }
+      textarea {
+        resize: vertical;
+        width: 95%;
+        margin-top: 4px;
+      }
+      select {
+        display: block;
+        width: 100%;
+        height: 30px;
+      }
+      input {
+        color: #444;
+      }
+      input#uname,
+      input#passw,
+      span#owspan {
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+
+      .form-control {
+        padding: 4px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #eee;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -webkit-transition: border-color ease-in-out 0.15s,
+          -webkit-box-shadow ease-in-out 0.15s;
+        -o-transition: border-color ease-in-out 0.15s,
+          box-shadow ease-in-out 0.15s;
+        transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+      }
+      .btn {
+        display: inline-block;
+        padding: 4px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+      }
+      .btn-info {
+        color: #fff;
+        background-color: #5bc0de;
+        border-color: #46b8da;
+      }
+      .btn-copy {
+        margin: 1px;
+        padding: 1px 6px 2px 6px;
+        /* font-weight: 100; */
+        color: #fff;
+        background-color: #5bc0de;
+        border-color: #46b8da;
+      }
+      .btn-warning {
+        color: #fff;
+        background-color: #f0ad4e;
+        border-color: #eea236;
+      }
+      .btn-success {
+        color: #fff;
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+      }
+      button {
+        border-radius: 4px;
+        background: #f4f4f4;
+        margin-bottom: 5px;
+      }
+      .alert {
+        padding: 6px;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        animation-name: hide;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-play-state: paused;
+      }
+      button#delete {
+        margin-top: 4px;
+      }
+      .alert-danger {
+        background: #eaa;
+        color: #b33;
+      }
+      .alert-success {
+        background: #f0ad4e;
+      }
+      .hide,
+      #clear,
+      #owspan {
+        float: right;
+        color: #666;
+      }
+      button.hide {
+        border: 0;
+        background: none;
+        margin-top: -1px;
+        font-size: 16px;
+        color: #888;
+      }
+      div.alert-danger > button.hide:hover {
+        color: #b33;
+      }
+      div.alert-success > button.hide:hover {
+        color: #3b3;
+      }
+      button:hover {
+        cursor: pointer;
+        color: #3b3;
+      }
+      @keyframes hide {
+        from {
+          opacity: 0.7;
+          font-size: 0.9em;
+          height: auto;
+        }
+        to {
+          opacity: 0;
+          font-size: 0.1em;
+          height: 0;
+        }
+      }
+
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #999;
+        background-color: #666;
+      }
+      .container {
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      pre {
+        display: block;
+        padding: 6px;
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        line-height: 1.42857143;
+        color: #777;
+        word-break: break-all;
+        word-wrap: break-word;
+        overflow: auto;
+        background-color: #f4f4f4;
+        border: 1px solid #999;
+        border-radius: 4px;
+      }
+      span#notes,
+      span#plaintextarea {
+        font-size: 11px;
+        color: #666;
+      } /*line-height: 1.42857143;*/
+      #decrypt,
+      #encrypt {
+        float: right;
+      }
+      select {
+        border-radius: 4px;
+        background: #f4f4f4;
+        font-size: 15px;
+        border: 2px solid #bbb;
+      }
+      div {
+        margin: 7px 0 5px 0;
+      }
+      h5 {
+        margin: 7px 0 5px 0;
+      }
+      .titlerow {
+        height: 2em;
+        padding: 6px;
+        margin-bottom: 4px;
+        margin-top: -8px;
+        margin-right: -4px;
+        margin-left: -4px;
+        background: #363;
+        color: rgb(210, 241, 210); /*         rgb(210, 241, 210) #363         */
+      }
+      .muted {
+        font-family: "Courier";
+        font-size: 9px;
+      }
+
+      .icon {
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: inherit;
+        font-style: normal;
+        height: 1em;
+        position: relative;
+        text-indent: -9999px;
+        vertical-align: middle;
+        width: 1em;
+      }
+
+      .icon::before,
+      .icon::after {
+        content: "";
+        display: block;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      #encrypt::before {
+        content : "\1f512";
+      } 
+
+      #delete::before {
+        content : "\1f4a3";
+      }      
+      #clear::before {
+        content : "\1f9f9";
+      }      
+      
+      #decrypt::before {
+        content : "\1f513";
+      }
+
+      .icon-copy::before {
+        border: 0.1rem solid currentColor;
+        border-bottom: 0;
+        border-radius: 0.1rem;
+        border-right: 0;
+        height: 0.8em;
+        left: 40%;
+        top: 35%;
+        width: 0.8em;
+      }
+
+      .icon-copy::after {
+        border: 0.1rem solid currentColor;
+        border-radius: 0.1rem;
+        height: 0.8em;
+        left: 60%;
+        top: 60%;
+        width: 0.8em;
+      }
+    </style>
+    <!-- https://github.com/bitwiseshiftleft/sjcl/blob/master/sjcl.js
+   // https://github.com/zenorocha/clipboard.js -->
+    <script src="sjcl.js"></script>
+    <script src="clipboard.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h4 class="titlerow">
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAdCAYAAABIWle8AAAACXBIWXMAAAsTAAALEwEAmpwYAAADoUlEQVRIx5WVX0xbZRjGf985p6UtbbEiSpYGnBtubInizBrUZICSyJItzmRXixqYfzPjzeISjDrJdsOF8UK90MCiMVHjncYLuFlm4p8YJ4NtLMAcKzIkGhi0g57S03PO6wVQWwpIn6vzfd/zPt/758l3FGvQe35GPb4rFPtxZOGgrqu1xziOEKsr7/t9PPXby09VSf5ZMRtoPXtdLsXTbISHa/1ceO/BolhjPfL0fBaPodgb9RH06bn9VMZh+NYSk7MWW8aek9fkro4h+XlsoTN//1Lc7KzoGJIdbwzLenHaZqJmRnz561TG9alN+LkyRaTRnvyzzajQl/a/PU3Etal2k03ZyYmuVc54MtEUcVIELB1J3uq0E47PqKnpV0r7NTeA1Be9g4s9HzbguAhCsEwDpUhnXNy8gpSCQJkGAosZB4UCXaO8/bWh4IsnHjFEpHG+/YEG5bkHvMvq5mq0r3jc5koKmn/VDsLAdxcbboo0aq4Zbwsdi6PXpEAoEUI8tJe39n2M85fdpim1fHf4hTH0qFmCoDAVrOdU7FNAEC3fZ66i4vgIyc/qufvz4aJQ187izt0me2UQ88tzxBPlnIz14JEs2ZWGFphWbI1w++i6eWiGB+3eaozWg3ifaKHna/D8nf0fnzmFLZ9pjTHTGmP2aBvp8/0A6H4fr7QYpZm2IOvEHHO9Pbl1/TatdLF4fS0V1jwToZ2cevSTTbnFuapC/cjTN3gs+gf3By1eb/6vBaPT7hbEpNAbdYcGGTgE4M3tLVku536wtiC2gdFsxyFhClcmXb76xWZiVtjSe5aP/d8czX379RDGzBG0ZAuglz4AQxnomo5SirSzgKr+FjdwDRG1uZgCbtiRNUW76EpDWxnMHWuBO/d1Y5fdLHr1tXyh63aEY4mmQg+Li+VkcVwn71IPqeg7RYKGrCxHshFeSh5ARwr6tBEUBma0i8DUabB2ICJoIIxl/RxPHsChdJjRM9i+cURA0/zb+141D5f+lOW3ovYsu6qNfn20MTn93O4jMpdJNP+TtATXq8Tx4jpeqgIhKv1hwt4gYW8QQ5WxmNbA8bLM8cjuym3qzX0dQzsjte8WjGP7iTFJW8s5Jk1HJj/ac6aqUuV+KBeG3K7D74+eDvo0BVAV1rn6QZ1a1xrPxAKXF620mPaSPPlQ2dV8IYCWBq3r+eagSttLsmCl5dnGwOVN6/9pdLG7bzDZvd7Z1G1LAXw/kOi+OJ4q4vwLjp5256qkylkAAAAASUVORK5CYII="
+          alt="PocketPass"
+          title="PocketPass"
+        />ocketPass -
+        <small> <mark>Pocket Pass</mark>word manager</small>
+        <button id="clear" class="btn btn-success">Clear</button>
+      </h4>
+      <h5 id="decryptheader">Decrypt</h5>
+      <div id="decryptdiv">
+        <select id="mySelect" class="form-control"></select>
+        <div><span id="notes">.</span></div>
+        <div>
+          <div>
+            <input
+              id="password"
+              class="form-control"
+              autocomplete="off"
+              placeholder="Enter master password"
+              type="password"
+            />
+            <button id="eye" class="btn">&#128065;</button>
+            <button id="decrypt" class="btn btn-info">Decrypt</button>
+          </div>
+          <span id="plaintextarea"></span>
+          <button
+            id="split"
+            class="btn btn-copy"
+            title="split username~password at ~"
+          >
+            Split at ~
+          </button>
+          <div id="splitarea">
+            <div>
+              <input id="uname" type="text" size="40" />
+              <button
+                id="zz"
+                title="copy to clipboard"
+                class="btn btn-copy"
+                data-clipboard-target="#uname"
+              >
+                <i class="icon icon-copy"></i>
+              </button>
+            </div>
+            <div>
+              <input id="passw" type="text" size="40" />
+              <button
+                id="tt"
+                title="copy to clipboard"
+                class="btn btn-copy"
+                data-clipboard-target="#passw"
+              >
+                <i class="icon icon-copy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="addeditdiv">
+        <h5>Add Edit Delete Merge</h5>
+        <form id="encryptform">
+          <div>
+            <button
+              id="editbtn"
+              class="btn btn-success"
+              title="carry into label/text input fields"
+            >
+              Copy &raquo;
+            </button>
+
+            <label for="label">Label </label
+            ><input
+              id="label"
+              class="form-control"
+              name="label"
+              type="text"
+              placeholder="will display in dropdown"
+              size="30"
+            />
+          </div>
+          <div>
+            <label for="text">Text </label
+            ><input
+              id="raw"
+              class="form-control"
+              type="text"
+              name="text"
+              autocomplete="off"
+              placeholder="message to be encrypted: username~password"
+              size="40"
+            />
+            <button id="encrypt" type="submit" class="btn btn-warning">
+              Encrypt
+            </button>
+          </div>
+          <button id="delete" title="Delete this entry" class="btn btn-warning">
+            Delete
+          </button>
+        </form>
+        <div id="resultdiv"><pre></pre></div>
+        <div>
+          <button
+            id="res"
+            title="copy to clipboard"
+            class="btn btn-copy"
+            data-clipboard-target="#resultdiv"
+          >
+            <i class="icon icon-copy"></i>
+          </button>
+        </div>
+      </div>
+      <div id="resultareadiv">
+        <div>
+          <textarea
+            name="result"
+            id="result"
+            class="form-control"
+            rows="3"
+            placeholder="Merge area"
+          ></textarea>
+        </div>
+        <div>
+          <button id="merge" class="btn btn-info">Merge</button>
+          <span id="owspan">
+            <label for="overwrite"
+              >overwrite existing<input
+                class="form-control"
+                type="checkbox"
+                id="overwrite"
+                name="overwrite"
+                value="newsletter"
+            /></label>
+          </span>
+        </div>
+      </div>
+
+      <br />
+      <a href="#" id="admin" title="Click to access hidden Admin area."
+        ><span class="muted">23_11_01 ADMIN</span></a
+      >
+
+      <!-- <button id="admin" class="btn btn-sm">Admin</button> -->
+      <div id="adminarea">
+        <h4>Admin area</h4>
+        <h5>Change Master Password</h5>
+
+        <label for="admin_password">Master Password </label
+        ><input
+          id="admin_password"
+          class="form-control"
+          autocomplete="off"
+          placeholder="Enter master password"
+          type="password"
+        />
+        Entries:
+        <input
+          id="count"
+          class="form-control"
+          type="text"
+          name="count"
+          autocomplete="off"
+          size="5"
+          disabled
+        />
+        <br />
+        <label for="new_password">New Master Password </label
+        ><input
+          id="new_password"
+          class="form-control"
+          type="password"
+          name="new_password"
+          autocomplete="off"
+          placeholder="new master password"
+          size="20"
+        /><br />
+        <label for="retype">Retype </label
+        ><input
+          id="retype"
+          class="form-control"
+          type="password"
+          name="retype"
+          autocomplete="off"
+          placeholder="retype new password"
+          size="20"
+        />
+        <p>
+          <label for="reencrypt"
+            >Re-encrypt all entries with new Master Password:</label
+          >
+          <button id="reencrypt" class="btn btn-sm">Re-Encrypt</button>
+        </p>
+        <br />
+        <h5>Erase all entries (delete LocalStorage info in this browser)</h5>
+
+        <label for="eraseallpassword"> "Erase All" password </label>
+        <input
+          type="password"
+          name="eraseallpassword"
+          id="eraseallpassword"
+          autocomplete="off"
+          placeholder="'Erase all' password"
+          class="form-control"
+        />
+
+        <br />
+        <p>
+          <label> Erase All Entries? [cannot be undone] </label>
+          <button id="eraseall" class="btn btn-danger">ERASE ALL</button>
+        </p>
+
+        <br />
+        <h5>Single Decrypt</h5>
+
+          <label for="single_label"> Label </label>
+          <div><input
+            type="text"
+            name="single_label"
+            id="single_label"
+            autocomplete="off"
+            placeholder="Label"
+            class="form-control"
+            size="60"
+          /></div>
+
+          <label for="single_ct"> CipherText </label>
+          <div><input
+            type="text"
+            name="single_ct"
+            id="single_ct"
+            autocomplete="off"
+            placeholder="CipherText"
+            class="form-control"
+            size="60"
+          /></div>          
+
+          <label for="single_iv"> Initialization Vector </label>
+          <div><input
+            type="text"
+            name="single_iv"
+            id="single_iv"
+            autocomplete="off"
+            placeholder="Initialization Vector"
+            class="form-control"
+            size="60"
+          /></div>
+
+          <label for="single_password"> Password </label>
+          <div><input
+              id="single_password"
+              class="form-control"
+              autocomplete="off"
+              placeholder="Enter single decrypt password"
+              type="password"
+              size="60"
+              /></div>
+
+          <label for="single_plain"> PlainText </label>
+            <input
+            type="text"
+            id="single_plain"
+            name="single_plain"
+            autocomplete="off"
+            size="60"
+            class="form-control"
+            />
+
+      </div>
+    </div>
+    <script src="pocketpass.js" charset="utf-8"></script>
+  </body>
+</html>
